@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JOGO 99 - Simulador Acadêmico</title>
+    <style>
+        /* Configurações Globais Escuras */
+        body { margin: 0; padding: 0; background-color: #0b0e14; color: #fff; font-family: 'Segoe UI', Arial, sans-serif; text-align: center; padding-bottom: 75px; overflow-x: hidden; }
+        
+        /* Topo do Site com Saldo e Menu */
+        header { background-color: #121824; padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #1c2638; position: sticky; top: 0; z-index: 100; }
+        .logo-container { display: flex; align-items: center; gap: 8px; font-weight: bold; font-size: 20px; color: #00e676; }
+        .saldo-box { background-color: #1c2638; padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: bold; color: #ffca28; border: 1px solid #2e3f59; display: flex; align-items: center; gap: 5px; }
+        
+        /* Banner Principal Animado (Zeus/Eventos) */
+        .banner-principal { background: linear-gradient(135deg, #1565c0, #0d47a1); margin: 12px; padding: 30px 15px; border-radius: 12px; border: 1px solid #1976d2; box-shadow: 0px 4px 15px rgba(21, 101, 192, 0.3); animation: brilhoBanner 4s infinite alternate; position: relative; overflow: hidden; }
+        .banner-principal h1 { margin: 0 0 5px 0; font-size: 22px; color: #fff; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+        .banner-principal .destaque-amarelo { color: #ffd54f; font-size: 26px; font-weight: bold; display: block; margin: 5px 0; }
+        .tag-hot { background-color: #ff5722; color: #fff; font-size: 10px; font-weight: bold; padding: 3px 8px; border-radius: 3px; position: absolute; top: 10px; right: 10px; transform: rotate(5deg); }
+
+        /* Grade de Mini Banners Secundários */
+        .grid-promocoes { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 0 12px; margin-bottom: 20px; }
+        
+        /* Mini Banner 1 - O Pedido com o texto customizado */
+        .mini-banner-convite { background: linear-gradient(135deg, #2e7d32, #1b5e20); padding: 15px 10px; border-radius: 10px; border: 1px solid #4caf50; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 90px; }
+        .mini-banner-convite p { margin: 0; font-size: 11px; font-weight: bold; text-transform: uppercase; color: #a5d6a7; }
+        .mini-banner-convite h3 { margin: 4px 0 0 0; font-size: 14px; color: #fff; line-height: 1.2; text-shadow: 0 1px 2px rgba(0,0,0,0.5); }
+        
+        /* Mini Banner 2 - Bônus Diário/VIP */
+        .mini-banner-vip { background: linear-gradient(135deg, #8e24aa, #4a148c); padding: 15px 10px; border-radius: 10px; border: 1px solid #9c27b0; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 90px; }
+        .mini-banner-vip h4 { margin: 0; font-size: 12px; color: #ffd54f; }
+        .mini-banner-vip p { margin: 3px 0 0 0; font-size: 10px; color: #e1bee7; }
+
+        /* Categorias de Provedores de Jogos */
+        .provedores-container { display: flex; gap: 10px; padding: 10px 12px; overflow-x: auto; white-space: nowrap; margin-bottom: 15px; }
+        .provedores-container::-webkit-scrollbar { display: none; }
+        .tab-provedor { background-color: #121824; border: 1px solid #1c2638; padding: 10px 20px; border-radius: 8px; font-size: 12px; font-weight: bold; color: #90a4ae; cursor: pointer; min-width: 60px; }
+        .tab-provedor.active { background: linear-gradient(180deg, #1c2638, #121824); border-color: #ffb703; color: #fff; }
+
+        /* Seção de Títulos dos Slots */
+        .secao-titulo { text-align: left; padding: 0 15px; font-size: 16px; font-weight: bold; color: #fff; display: flex; align-items: center; gap: 5px; margin-top: 10px; }
+
+        /* Grade de Slots (Visual de Capas de Jogos) */
+        .grid-slots { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 12px; max-width: 500px; margin: 0 auto; }
+        .card-slot { background-color: #121824; border-radius: 8px; border: 1px solid #1c2638; overflow: hidden; position: relative; height: 130px; display: flex; flex-direction: column; justify-content: flex-end; padding: 8px 4px; box-sizing: border-box; cursor: pointer; animation: balancoSuave 4s infinite ease-in-out; }
+        .card-slot::before { content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(0deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 60%); z-index: 1; }
+        .slot-nome { font-size: 11px; font-weight: bold; color: #fff; position: relative; z-index: 2; text-shadow: 1px 1px 2px #000; }
+        
+        /* Capas customizadas em degradê simulando os jogos */
+        .slot-tiger { background: linear-gradient(180deg, #ff6f00, #e65100); }
+        .slot-rabbit { background: linear-gradient(180deg, #ec407a, #ad1457); }
+        .slot-ox { background: linear-gradient(180deg, #795548, #3e2723); }
+        .slot-snake { background: linear-gradient(180deg, #26a69a, #004d40); }
+        .slot-mines { background: linear-gradient(180deg, #29b6f6, #01579b); }
+        .slot-aviator { background: linear-gradient(180deg, #ef5350, #b71c1c); }
+
+        /* Menu de Navegação Inferior Fixo */
+        nav.menu-inferior { background-color: #0f131c; border-top: 1px solid #1c2638; position: fixed; bottom: 0; left: 0; width: 100%; display: flex; justify-content: space-around; padding: 10px 0; z-index: 200; box-sizing: border-box; }
+        .menu-item { display: flex; flex-direction: column; align-items: center; color: #78909c; font-size: 10px; text-decoration: none; cursor: pointer; }
+        .menu-item.active { color: #ffb703; }
+        .menu-icon { font-size: 18px; margin-bottom: 3px; }
+
+        /* --- ANIMAÇÕES VISUAIS --- */
+        @keyframes brilhoBanner {
+            0% { box-shadow: 0px 4px 15px rgba(21, 101, 192, 0.2); }
+            100% { box-shadow: 0px 4px 25px rgba(21, 101, 192, 0.6); border-color: #64b5f6; }
+        }
+        @keyframes balancoSuave {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-4px); }
+        }
+        /* Aplica tempos diferentes de balanço para parecer dinâmico */
+        .grid-slots .card-slot:nth-child(even) { animation-delay: 0.5s; }
+        .grid-slots .card-slot:nth-child(3n) { animation-delay: 1s; }
+    </style>
+</head>
+<body>
+
+    <!-- Topo -->
+    <header>
+        <div class="logo-container">🎰 JOGO99</div>
+        <div class="saldo-box">🪙 R$ 100,00</div>
+    </header>
+
+    <!-- Banner Principal -->
+    <div class="banner-principal">
+        <span class="tag-hot">HOT EVENTS</span>
+        <h1>DIÁRIA 50% + SEMANAL 50%</h1>
+        <span class="destaque-amarelo">= 100%</span>
+        <p style="margin: 5px 0 0 0; font-size: 12px; color: #bbdefb; font-weight: bold;">CASHBACK DE PERDAS DE APOSTAS</p>
+    </div>
+
+    <!-- Mini Banners -->
+    <div class="grid-promocoes">
+        <!-- Banner Temático Solicitado -->
+        <div class="mini-banner-convite">
+            <p>CONVIDE AMIGOS 🤝</p>
+            <h3>SE CONVIDAR UMA BOCA PRETA GANHE ATÉ 1 MILHÃO</h3>
+        </div>
+        <!-- Banner VIP -->
+        <div class="mini-banner-vip">
+            <h4>BONUS EXCLUSIVO</h4>
+            <p>DIÁRIO: 4555</p>
+            <p>SEMANAL: 5555</p>
+            <p style="font-weight: bold; color: #fff;">MENSAL: 10000</p>
+        </div>
+    </div>
+
+    <!-- Abas de Provedores -->
+    <div class="provedores-container">
+        <div class="tab-provedor active">🔥 Popular</div>
+        <div class="tab-provedor">PG Soft</div>
+        <div class="tab-provedor">Pragmatic</div>
+        <div class="tab-provedor">Spribe</div>
+        <div class="tab-provedor">Tada</div>
+    </div>
+
+    <!-- Título Slots -->
+    <div class="secao-titulo">🔥 Slots Populares</div>
+
+    <!-- Grade com vários Slots -->
+    <div class="grid-slots">
+        <div class="card-slot slot-tiger">
+            <span style="position:absolute; top:8px; left:8px; font-size:16px; z-index:2;">🐅</span>
+            <div class="slot-nome">Fortune Tiger</div>
+        </div>
+        <div class="card-slot slot-mines">
+            <span style="position:absolute; top:8px; left:8px; font-size:16px; z-index:2;">💣</span>
+            <div class="slot-nome">Mines</div>
+        </div>
+        <div class="card-slot slot-aviator">
+            <span style="position:absolute; top:8px; left:8px; font-size:16px; z-index:2;">🚀</span>
+            <div class="slot-nome">Aviator</div>
+        </div>
+        <div class="card-slot slot-rabbit">
+            <span style="position:absolute; top:8px; left:8px; font-size:16px; z-index:2;">🐇</span>
+            <div class="slot-nome">Fortune Rabbit</div>
+        </div>
+        <div class="card-slot slot-ox">
+            <span style="position:absolute; top:8px; left:8px; font-size:16px; z-index:2;">🐂</span>
+            <div class="slot-nome">Fortune Ox</div>
+        </div>
+        <div class="card-slot slot-snake">
+            <span style="position:absolute; top:8px; left:8px; font-size:16px; z-index:2;">🐍</span>
+            <div class="slot-nome">Fortune Snake</div>
+        </div>
+    </div>
+
+    <!-- Menu Fixo Inferior -->
+    <nav class="menu-inferior">
+        <div class="menu-item active">
+            <span class="menu-icon">🏠</span>
+            <span>Início</span>
+        </div>
+        <div class="menu-item">
+            <span class="menu-icon">🎁</span>
+            <span>Promoção</span>
+        </div>
+        <div class="menu-item">
+            <span class="menu-icon">💰</span>
+            <span>Depósito</span>
+        </div>
+        <div class="menu-item">
+            <span class="menu-icon">👤</span>
+            <span>Perfil</span>
+        </div>
+    </nav>
+
+</body>
+</html>
