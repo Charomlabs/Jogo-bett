@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GOLDEBET777 - Simulador Oficial</title>
+    <style>
+        /* Configurações Globais Escuras e Modernas */
+        body { margin: 0; padding: 0; background-color: #0b0e14; color: #fff; font-family: 'Segoe UI', Arial, sans-serif; text-align: center; padding-bottom: 75px; overflow-x: hidden; }
+        
+        /* Topo do Site com Saldo Numérico Realista */
+        header { background-color: #121824; padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #1c2638; position: sticky; top: 0; z-index: 100; }
+        .logo-container { display: flex; align-items: center; gap: 8px; font-weight: bold; font-size: 20px; color: #00e676; letter-spacing: 1px; }
+        .saldo-box { background-color: #1c2638; padding: 6px 14px; border-radius: 6px; font-size: 14px; font-weight: 600; color: #ffffff; border: 1px solid #2e3f59; font-family: monospace; }
+        
+        /* Banner Principal Animado com Efeito Neon */
+        .banner-principal { background: linear-gradient(135deg, #1565c0, #0d47a1); margin: 12px; padding: 30px 15px; border-radius: 12px; border: 1px solid #1976d2; box-shadow: 0px 4px 15px rgba(21, 101, 192, 0.3); animation: brilhoBanner 4s infinite alternate; position: relative; overflow: hidden; }
+        .banner-principal h1 { margin: 0 0 5px 0; font-size: 22px; color: #fff; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+        .banner-principal .destaque-amarelo { color: #ffd54f; font-size: 26px; font-weight: bold; display: block; margin: 5px 0; }
+        .tag-hot { background-color: #ff5722; color: #fff; font-size: 10px; font-weight: bold; padding: 3px 8px; border-radius: 3px; position: absolute; top: 10px; right: 10px; transform: rotate(5deg); }
+
+        /* Grade de Mini Banners Secundários */
+        .grid-promocoes { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 0 12px; margin-bottom: 20px; }
+        
+        /* Mini Banner 1 - Customizado */
+        .mini-banner-convite { background: linear-gradient(135deg, #2e7d32, #1b5e20); padding: 15px 10px; border-radius: 10px; border: 1px solid #4caf50; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 95px; box-sizing: border-box; }
+        .mini-banner-convite p { margin: 0; font-size: 11px; font-weight: bold; text-transform: uppercase; color: #a5d6a7; }
+        .mini-banner-convite h3 { margin: 4px 0 0 0; font-size: 11px; color: #fff; line-height: 1.3; text-shadow: 0 1px 2px rgba(0,0,0,0.5); }
+        
+        /* Mini Banner 2 - Bônus Diário/VIP */
+        .mini-banner-vip { background: linear-gradient(135deg, #8e24aa, #4a148c); padding: 15px 10px; border-radius: 10px; border: 1px solid #9c27b0; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 95px; box-sizing: border-box; }
+        .mini-banner-vip h4 { margin: 0; font-size: 12px; color: #ffd54f; }
+        .mini-banner-vip p { margin: 3px 0 0 0; font-size: 10px; color: #e1bee7; }
+
+        /* Categorias de Provedores de Jogos */
+        .provedores-container { display: flex; gap: 10px; padding: 10px 12px; overflow-x: auto; white-space: nowrap; margin-bottom: 15px; }
+        .provedores-container::-webkit-scrollbar { display: none; }
+        .tab-provedor { background-color: #121824; border: 1px solid #1c2638; padding: 10px 20px; border-radius: 8px; font-size: 12px; font-weight: bold; color: #90a4ae; cursor: pointer; min-width: 60px; }
+        .tab-provedor.active { background: linear-gradient(180deg, #1c2638, #121824); border-color: #ffb703; color: #fff; }
+
+        /* Seção de Títulos dos Slots */
+        .secao-titulo { text-align: left; padding: 0 15px; font-size: 16px; font-weight: bold; color: #fff; display: flex; align-items: center; gap: 5px; margin-top: 10px; }
+
+        /* Grade de Slots Ajustada para Imagens Reais */
+        .grid-slots { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 12px; max-width: 500px; margin: 0 auto; }
+        
+        /* Links dos Cards transformados em bloco clicável */
+        .card-slot { text-decoration: none; background-color: #121824; border-radius: 8px; border: 1px solid #1c2638; overflow: hidden; position: relative; height: 145px; display: flex; flex-direction: column; justify-content: flex-end; box-sizing: border-box; cursor: pointer; animation: balancoSuave 4s infinite ease-in-out; background-size: cover; background-position: center; background-repeat: no-repeat; }
+        
+        /* Sombra Gradual Avançada para Destacar o Texto sobre a Imagem */
+        .card-slot::before { content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(0deg, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.1) 100%); z-index: 1; }
+        .slot-nome { font-size: 11px; font-weight: bold; color: #fff; position: relative; z-index: 2; text-shadow: 1px 1px 4px #000; padding-bottom: 6px; }
+        
+        /* Menu de Navegação Inferior Fixo */
+        nav.menu-inferior { background-color: #0f131c; border-top: 1px solid #1c2638; position: fixed; bottom: 0; left: 0; width: 100%; display: flex; justify-content: space-around; padding: 12px 0; z-index: 200; box-sizing: border-box; }
+        .menu-item { display: flex; flex-direction: column; align-items: center; color: #78909c; font-size: 10px; text-decoration: none; cursor: pointer; }
+        .menu-item.active { color: #ffb703; }
+        .menu-icon { font-size: 18px; margin-bottom: 3px; }
+
+        /* --- ANIMAÇÕES VISUAIS --- */
+        @keyframes brilhoBanner {
+            0% { box-shadow: 0px 4px 15px rgba(21, 101, 192, 0.2); }
+            100% { box-shadow: 0px 4px 25px rgba(21, 101, 192, 0.6); border-color: #64b5f6; }
+        }
+        @keyframes balancoSuave {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-4px); }
+        }
+        .grid-slots .card-slot:nth-child(even) { animation-delay: 0.5s; }
+        .grid-slots .card-slot:nth-child(3n) { animation-delay: 1s; }
+    </style>
+</head>
+<body>
+
+    <!-- Topo Customizado GOLDEBET777 e Saldo Profissional -->
+    <header>
+        <div class="logo-container">🎰 GOLDEBET777</div>
+        <div class="saldo-box">R\$ 143,82</div>
+    </header>
+
+    <!-- Banner Principal -->
+    <div class="banner-principal">
+        <span class="tag-hot">HOT EVENTS</span>
+        <h1>DIÁRIA 50% + SEMANAL 50%</h1>
+        <span class="destaque-amarelo">= 100%</span>
+        <p style="margin: 5px 0 0 0; font-size: 12px; color: #bbdefb; font-weight: bold;">CASHBACK DE PERDAS DE APOSTAS</p>
+    </div>
+
+    <!-- Mini Banners -->
+    <div class="grid-promocoes">
+        <div class="mini-banner-convite">
+            <p>CONVIDE AMIGOS 🤝</p>
+            <h3>SE CONVIDAR UMA BOCA PRETA GANHE ATÉ 1 MILHÃO</h3>
+        </div>
+        <div class="mini-banner-vip">
+            <h4>BONUS EXCLUSIVO</h4>
+            <p>DIÁRIO: 4555</p>
+            <p>SEMANAL: 5555</p>
+            <p style="font-weight: bold; color: #fff;">MENSAL: 10000</p>
+        </div>
+    </div>
+
+    <!-- Abas de Provedores -->
+    <div class="provedores-container">
+        <div class="tab-provedor active">🔥 Popular</div>
+        <div class="tab-provedor">PG Soft</div>
+        <div class="tab-provedor">Pragmatic</div>
+        <div class="tab-provedor">Spribe</div>
+        <div class="tab-provedor">Tada</div>
+    </div>
+
+    <!-- Título Slots -->
+    <div class="secao-titulo">🔥 Slots Populares</div>
+
+    <!-- Grade com Links Oficiais Individuais configurados de forma exata -->
+    <div class="grid-slots">
+        <!-- Fortune Tiger (Abre o link Demo Oficial da PG Soft) -->
+        <a class="card-slot" target="_blank" href="https://pgsoft-games.com" style="background-image: url('https://folhape.com.br');">
+            <div class="slot-nome">Fortune Tiger</div>
+        </a>
+        
+        <!-- Mines (Abre a Demo Oficial da Spribe) -->
+        <a class="card-slot" target="_blank" href="https://spribe.co" style="background-image: url('https://gstatic.com');">
+            <div class="slot-nome">Mines</div>
+        </a>
+        
+        <!-- Aviator (Abre a Demo Oficial da Spribe do Aviãozinho) -->
+        <a class="card-slot" target="_blank" href="https://spribe.co" style="background-image: url('https://ndmais.com.br');">
+            <div class="slot-nome">Aviator</div>
+        </a>
+        
+        <!-- Fortune Rabbit (Abre o link Demo Oficial do Coelho) -->
+        <a class="card-slot" target="_blank" href="https://pgsoft-games.com" style="background-image: url('https://tapimg.net');">
+            <div class="slot-nome">Fortune Rabbit</div>
+        </a>
+        
+        <!-- Fortune Ox (Abre o link Demo Oficial do Touro/Boi) -->
+        <a class="card-slot" target="_blank" href="https://pgsoft-games.com" style="background-image: url('https://imgix.net');">
+            <div class="slot-nome">Fortune Ox</div>
+        </a>
+        
+        <!-- Gates of Olympus (Abre a Demo Oficial do Zeus da Pragmatic Play) -->
